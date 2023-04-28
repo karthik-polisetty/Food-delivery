@@ -1,2 +1,31 @@
-<h1>Welcome To My Data Science Project Session</h1>
-<h2>This is for Gem price prediction</h2>
+<!DOCTYPE html>
+<head>
+    <title>Intro Page</title>
+    <style>
+
+      body {
+        background-image: url("https://media.istockphoto.com/id/1019220022/photo/various-of-international-money-coin-and-banknote-background-time-investment-with-currency.jpg?s=170667a&w=0&k=20&c=0sJHoxdcGcCR06iQO70lxnH3JnnRh6twDoHfGbbm94k=");
+        background-size: cover;
+      }
+    </style>
+
+<script>
+    function redirectTo(path) {
+      var currentUrl = window.location.href;
+      var newUrl = currentUrl.split('?')[0] + path; // Remove query params and add path
+      window.location.href = newUrl;
+    }
+  </script>
+</head>
+
+<body>
+<h1>Welcome To My Data Science Project on Logistic Regression</h1>
+<h2>This is for predicting the time required to deliver an order</h2>
+
+<button onclick="redirectTo('/predict')">Click here</button>
+
+</body>
+
+</html>
+
+

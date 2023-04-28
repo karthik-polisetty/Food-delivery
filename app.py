@@ -18,17 +18,28 @@ def predict_datapoint():
     if request.method == 'GET':
         return render_template('form.html')
     else:
-        data=CustomData(
-            carat=float(request.form.get('carat')),
-            depth = float(request.form.get('depth')),
-            table = float(request.form.get('table')),
-            x = float(request.form.get('x')),
-            y = float(request.form.get('y')),
-            z = float(request.form.get('z')),
-            cut = request.form.get('cut'),
-            color= request.form.get('color'),
-            clarity = request.form.get('clarity')
+        data = CustomData(
+            ID = (request.form.get('ID')),
+            Delivery_person_ID = (request.form.get('Delivery_person_ID')),
+            Delivery_person_Age = int(request.form.get('Delivery_person_Age')),
+            Delivery_person_Ratings = float(request.form.get('Delivery_person_Ratings')),
+            Restaurant_latitude = float(request.form.get('Restaurant_latitude')),
+            Restaurant_longitude = float(request.form.get('Restaurant_longitude')),
+            Delivery_location_latitude = float(request.form.get('Delivery_location_latitude')),
+            Delivery_location_longitude = float(request.form.get('Delivery_location_longitude')),
+            Order_Date = request.form.get('Order_Date'),
+            Time_Orderd = request.form.get('Time_Orderd'),
+            Time_Order_picked = request.form.get('Time_Order_picked'),
+            Weather_conditions = request.form.get('Weather_conditions'),
+            Road_traffic_density = request.form.get('Road_traffic_density'),
+            Vehicle_condition = request.form.get('Vehicle_condition'),
+            Type_of_order = request.form.get('Type_of_order'),
+            Type_of_vehicle = request.form.get('Type_of_vehicle'),
+            multiple_deliveries = request.form.get('multiple_deliveries'),
+            Festival = request.form.get('Festival'),
+            City = request.form.get('City')
         )
+
 
         data = data.get_data_as_dataframe()
         

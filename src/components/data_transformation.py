@@ -25,35 +25,43 @@ class DataTransformation:
     def get_data_transformation_object(self):
         try:
             logging.info("Getting data transformation object")
-            categorical_columns = ['cut', 'color','clarity']
-            numerical_columns = ['carat', 'depth','table', 'x', 'y', 'z']
+            numerical_columns = ['Delivery_person_Age','Delivery_person_Ratings','Vehicle_condition','multiple_deliveries','distance','time_diff']
+            categorical_columns = ['Weather_conditions','Road_traffic_density','Type_of_order','Type_of_vehicle','Festival','City']
+            
 
             logging.info(f"numerical columns are {numerical_columns}")
-            logging.info(f"categorical columns are {categorical_columns}")
+            logging.info(f"one hot encoding columns are {categorical_columns}")
+            
+            Weather_order = ['Sunny','Stormy','Sandstorms','Windy','Fog','Cloudy']
+            Road_traffic_order = ['Low','Medium','High','Jam']
+            order_type = ['Drinks','Buffet','Snack','Meal']
+            vehicle_type = ['electric_scooter','scooter','bicycle','motorcycle']
+            Festival_map = ['No','Yes']
+            City_map = ['Urban','Metropolitian','Semi-Urban']
+            
+            
 
-            cut_categories = ['Fair', 'Good', 'Very Good','Premium','Ideal']
-            color_categories = ['D', 'E', 'F', 'G', 'H', 'I', 'J']
-            clarity_categories = ['I1','SI2','SI1','VS2','VS1','VVS2','VVS1','IF']
-
-            num_pipeline = Pipeline(
-                steps=[
+            # createing a pipeline for different types of columns and encoding required for them
+            num_pipeline=Pipeline(
+            steps=[
                 ('imputer',SimpleImputer(strategy='median')),
-                ('scaler',StandardScaler())
-                ]
-            )
+                ('scaler',StandardScaler())])
 
-            cat_pipeline = Pipeline(
+            ##Categorical Pipeline
+
+            cat_pipeline=Pipeline(
                 steps=[
                 ('imputer',SimpleImputer(strategy='most_frequent')),
-                ('ordinalencoder',OrdinalEncoder(categories=[cut_categories,color_categories,clarity_categories])),
+                ('ordinalencoder',OrdinalEncoder(categories=[Weather_order,Road_traffic_order,order_type,vehicle_type,Festival_map,City_map])),
                 ('scaler',StandardScaler())
-                ]
-            )
+                ])
 
-            preprocessor = ColumnTransformer([
+            preprocessor=ColumnTransformer( [
                 ('num_pipeline',num_pipeline,numerical_columns),
-                ('cat_pipeline',cat_pipeline,categorical_columns)
-            ])
+                ('cat_pipeline',cat_pipeline,categorical_columns)])
+
+            
+
             logging.info('preprocessor object is prepared and returned')
 
             return preprocessor
@@ -68,6 +76,7 @@ class DataTransformation:
         
     def initiate_data_transformation(self,train_path,test_path):
         try:
+            # reading the train and test datasets from the paths read from return of initiate_data_ingestion function
             train_df = pd.read_csv(train_path)
             test_df = pd.read_csv(test_path)
 
@@ -79,8 +88,9 @@ class DataTransformation:
 
             preprocessing_obj = self.get_data_transformation_object()
 
-            target_column = 'price'
-            drop_columns = [target_column,'id']
+            # removing the target column from the main train and test datsets
+            target_column = 'Time_taken (min)'
+            drop_columns = [target_column]
 
             logging.info('creating train and test df X,Y to fit and tranform later')
 
@@ -91,14 +101,17 @@ class DataTransformation:
             target_feature_test_df=test_df[target_column]
 
             logging.info("created input and target features test and train datframes")
+            
 
             ## Transforming using preprocessor obj
             input_feature_train_arr = preprocessing_obj.fit_transform(input_feature_train_df)
             input_feature_test_arr = preprocessing_obj.transform(input_feature_test_df)
 
+            # Concatinating the preprocessed arrays and they are returned by the function and so that they can be used in other module
             train_arr = np.c_[input_feature_train_arr,np.array(target_feature_train_df)]
             test_arr = np.c_[input_feature_test_arr,np.array(target_feature_test_df)]
-
+            
+            # saving the preprocessing object in its path, so it can be used during prediction pipeline
             save_object(
                 self.data_transformation_config.preprocessor_obj_file_path,
                 preprocessing_obj

@@ -3,6 +3,6 @@ numpy
 flask
 seaborn
 requests
-sklearn
+scikit-learn
 geopy
-#-e .
+-e .
